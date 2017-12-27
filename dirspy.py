@@ -38,7 +38,7 @@ class cl:
 def rikues(line):
 	alamat = str(url) + str(line)
 	try: r = requests.get(alamat, headers = user_agent, timeout = 5)
-	except (requests.ConnectionError, requests.exceptions.Timeout): sys.exit()
+	except (requests.ConnectionError, requests.exceptions.Timeout, requests.exceptions.ChunkedEncodingError): sys.exit()
 	status = r.status_code
 
 	if status == 200:
