@@ -4,7 +4,6 @@
 from datetime import datetime
 from threading import Thread
 from time import sleep, strftime
-from IPython.display import clear_output
 import requests, sys
 
 file = open('dirs.txt', 'r').read().split('\n')
