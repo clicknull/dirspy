@@ -1,15 +1,17 @@
+#!/usr/bin/env python2
 # -*- coding: iso-8859-1 -*-
+
 from datetime import datetime
 from threading import Thread
-from time import sleep as ts
-import requests
+from time import sleep, strftime
+from IPython.display import clear_output
+import requests, sys
 
-time = datetime.now().strftime('%H:%M:%S')
-file = open('dir.txt', 'r').read().split('\n')
-url = "http://fadil.bnet.id/"
+file = open('dirs.txt', 'r').read().split('\n')
 user_agent = {'User-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
 
-print """
+def banner():
+	print """
  ____  _          ______   __
 |  _ \(_)_ __ ___|  _ \ \ / /
 | | | | | '__/ __| |_) \ V /
@@ -18,6 +20,11 @@ print """
 
 Copyright © 2017 - Backbox Indonesia
 """
+
+def helep():
+	print "DirsPY v1.1 ( www.backboxindonesia.or.id )"
+	print "Usage : python2 dirspy.py <url>"
+	print "EXAMPLE : python2 dirspy.py http://127.0.0.1/"
 
 class cl:
 	pink = '\033[95m'
@@ -29,29 +36,44 @@ class cl:
 	white = '\033[1m'
 	under = '\033[4m'
 
-print "Start scanning directory.."
-
 def rikues(line):
 	alamat = str(url) + str(line)
-	r = requests.get(alamat, headers = user_agent, timeout = 5)
+	try: r = requests.get(alamat, headers = user_agent, timeout = 5)
+	except (requests.ConnectionError, requests.exceptions.Timeout): sys.exit()
 	status = r.status_code
+
 	if status == 200:
-		print cl.green + '[{2}] {1} - {0}'.format(alamat, status, time) + cl.end
+		if line == '': pass
+		else: print cl.green + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 	elif status == 301:
-		print cl.red + '[{2}] {1} - {0}'.format(alamat, status, time) + cl.end
+		print cl.red + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 	elif status == 500:
-		print cl.pink + '[{2}] {1} - {0}'.format(alamat, status, time) + cl.end
+		print cl.pink + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 	elif status == 401:
-		print cl.yellow + '[{2}] {1} - {0}'.format(alamat, status, time) + cl.end
+		print cl.yellow + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 	elif status == 403:
 		if ".ht" in line: pass
-		else: print cl.blue + '[{2}] {1} - {0}'.format(alamat, status, time) + cl.end
+		else: print cl.blue + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 
+try: url = sys.argv[1]
+except: 
+	banner()
+	helep()
+	sys.exit()
+
+no = 0
+lcount = sum(1 for line in open('dirs.txt'))
+banner()
+print "Start scanning directory.."
 for line in file:
 	try:
 		t = Thread(target=rikues, args=(line,))
 		t.start()
+		no = no + 1
+		jumlah = ( no * 100 ) / lcount
+		sys.stdout.flush()
+		sys.stdout.write("[{}] => {}% Line : {}\r".format(datetime.now().strftime('%H:%M:%S'), jumlah, no))
 	except(KeyboardInterrupt,SystemExit): break
 
-ts(1)
-print "\nScanning compleated.."
+sleep(1)
+print "\n\nScanning compleated.."
