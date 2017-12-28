@@ -55,7 +55,7 @@ def rikues(line):
 		else: print cl.blue + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
 
 try: url = sys.argv[1]
-except: 
+except:
 	banner()
 	helep()
 	sys.exit()
@@ -73,6 +73,3 @@ for line in file:
 		sys.stdout.flush()
 		sys.stdout.write("[{}] => {}% Line : {}\r".format(datetime.now().strftime('%H:%M:%S'), jumlah, no))
 	except(KeyboardInterrupt,SystemExit): break
-
-sleep(1)
-print "\n\nScanning compleated.."
