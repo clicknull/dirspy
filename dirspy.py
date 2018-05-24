@@ -43,16 +43,16 @@ def rikues(line):
 
 	if status == 200:
 		if line == '': pass
-		else: print cl.green + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
+		else: sys.stdout.write(cl.green + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 301:
-		print cl.red + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
+		sys.stdout.write(cl.red + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 500:
-		print cl.pink + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
+		sys.stdout.write(cl.pink + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 401:
-		print cl.yellow + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
+		sys.stdout.write(cl.yellow + '[{2}] {1} - {0}n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 403:
 		if ".ht" in line: pass
-		else: print cl.blue + '[{2}] {1} - {0}'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end
+		else: sys.stdout.write(cl.blue + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 
 try: url = sys.argv[1]
 except:
@@ -73,3 +73,5 @@ for line in file:
 		sys.stdout.flush()
 		sys.stdout.write("[{}] => {}% Line : {}\r".format(datetime.now().strftime('%H:%M:%S'), jumlah, no))
 	except(KeyboardInterrupt,SystemExit): break
+
+print('')
