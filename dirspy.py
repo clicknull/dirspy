@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
-# -*- coding: iso-8859-1 -*-
+# Description : DirsPY - Directory Scanner (Python)
+# Author : Koboi137 ( Backbox Indonesia )
 
 from datetime import datetime
 from threading import Thread
@@ -17,11 +18,11 @@ def banner():
 | |_| | | |  \__ \  __/ | |
 |____/|_|_|  |___/_|    |_|
 
-Copyright © 2017 - Backbox Indonesia
+Backbox Indonesia (c) 2017 - 2018
 """
 
 def helep():
-	print "DirsPY v1.1 ( www.backboxindonesia.or.id )"
+	print "DirsPY v1.2 ( www.backboxindonesia.or.id )"
 	print "Usage : python2 dirspy.py <url>"
 	print "EXAMPLE : python2 dirspy.py http://127.0.0.1/"
 
@@ -70,7 +71,6 @@ for line in file:
 		t.start()
 		no = no + 1
 		jumlah = ( no * 100 ) / lcount
-		#sys.stdout.flush()
 		sys.stdout.write("[{}] => {}% Line : {}\r".format(datetime.now().strftime('%H:%M:%S'), jumlah, no))
 		sys.stdout.flush()
 	except(KeyboardInterrupt,SystemExit):
