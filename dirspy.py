@@ -49,7 +49,7 @@ def rikues(line):
 	elif status == 500:
 		sys.stdout.write(cl.pink + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 401:
-		sys.stdout.write(cl.yellow + '[{2}] {1} - {0}n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
+		sys.stdout.write(cl.yellow + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
 	elif status == 403:
 		if ".ht" in line: pass
 		else: sys.stdout.write(cl.blue + '[{2}] {1} - {0}\n'.format(alamat, status, datetime.now().strftime('%H:%M:%S')) + cl.end)
@@ -70,8 +70,9 @@ for line in file:
 		t.start()
 		no = no + 1
 		jumlah = ( no * 100 ) / lcount
-		sys.stdout.flush()
+		#sys.stdout.flush()
 		sys.stdout.write("[{}] => {}% Line : {}\r".format(datetime.now().strftime('%H:%M:%S'), jumlah, no))
-	except(KeyboardInterrupt,SystemExit): break
-
-print('')
+		sys.stdout.flush()
+	except(KeyboardInterrupt,SystemExit):
+		print('\r[{}] Exiting program ...'.format(datetime.now().strftime('%H:%M:%S')))
+		break
