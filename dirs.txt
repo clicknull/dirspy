@@ -615,7 +615,6 @@ admin_edite.php
 admin_edit_firm.php
 admin_edit_page.php
 admin_edit.php
-adminemails.php
 admin_en
 admin.epc
 adminer/
@@ -3113,9 +3112,13 @@ id_dsa.ppk
 .idea/workspace(6).xml
 .idea/workspace(7).xml
 .idea/workspace.xml
+idiot.php
+idiots.php
 id_rsa
 id_rsa.pub
 ids_log.php
+idx.php
+IDX.php
 .ignore
 .ignored/
 iiasdmpwd/
@@ -3757,6 +3760,7 @@ mailman
 mailman/listinfo
 .mailrc
 Mail/smtp/Admin/smadv.php
+mails.php
 main
 mainadmin
 main/login
@@ -5279,6 +5283,7 @@ spamlog.log
 special
 spec/lib/database.yml
 spec/lib/settings.local.yml
+s.php
 sponsors
 spool
 sports
@@ -6132,6 +6137,7 @@ web.tar.gz
 web.tgz
 web.xml
 web.zip
+weeso.php
 wenzhang
 whmcs/downloads/dz.php
 whmcs.php
@@ -6230,6 +6236,8 @@ www.tar
 www.tar.gz
 www.tgz
 www.zip
+x7.php
+x8.php
 xampp/phpmyadmin/
 xampp/phpmyadmin/scripts/setup.php
 xd.php
@@ -6241,6 +6249,7 @@ xml/common.xml
 xmlrpc.php
 xmlrpc_server.php
 x.php
+X.php
 xphperrors.log
 xphpMyAdmin/
 xsl/
@@ -6261,6 +6270,7 @@ yonetim.asp
 yonetim.html
 yonetim.php
 yum.log
+yusa.php
 zabbix/
 zebra.conf
 zehir.php
