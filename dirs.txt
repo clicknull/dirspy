@@ -4771,10 +4771,9 @@ pw.txt
 .python-eggs
 q
 qa/
-_?q=admin/
-?q=admin/
+index.php?q=admin/
 qdadmin
-?q=login/
+index.php?q=login/
 qmail
 qmailadmin
 .qqestore/
