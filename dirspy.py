@@ -20,9 +20,9 @@ def banner():
 	print('Backbox Indonesia (c) 2017 - 2018\n')
 
 def helep():
-	print('DirsPY v1.2 ( www.backboxindonesia.or.id )')
-	print('Usage : python2 dirspy.py <url>')
-	print('EXAMPLE : python2 dirspy.py http://127.0.0.1/')
+	print('DirsPY v2.0 ( www.backboxindonesia.or.id )')
+	print('Usage : python3 dirspy.py <url>')
+	print('EXAMPLE : python3 dirspy.py http://127.0.0.1/')
 
 class cl:
 	pink = '\033[95m'
