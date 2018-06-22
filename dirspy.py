@@ -68,7 +68,7 @@ def rikues(line):
 
 try:
 	url = sys.argv[1]
-	cek = requests.get(url)
+	cek = requests.get(url, headers = user_agent, timeout = 5, verify=False)
 	leng = len(cek.text)
 except:
 	banner()
