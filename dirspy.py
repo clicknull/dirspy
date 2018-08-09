@@ -3,9 +3,9 @@
 # Author : Koboi137 ( Backbox Indonesia )
 
 from datetime import datetime
-from threading import Thread
 from time import sleep, strftime
 import requests, sys, urllib3
+import os, threading
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 file = open('dirs.txt', 'r').read().split('\n')
@@ -17,10 +17,10 @@ def banner():
 	print("| | | | | '__/ __| |_) \ V /")
 	print('| |_| | | |  \__ \  __/ | |')
 	print('|____/|_|_|  |___/_|    |_|\n')
-	print('Backbox Indonesia (c) 2017 - 2018\n')
+	print('Backbox Indonesia (c) 2017 - 2018\n\n')
+	print('DirsPY v2.0 ( www.backboxindonesia.or.id )')
 
 def helep():
-	print('DirsPY v2.0 ( www.backboxindonesia.or.id )')
 	print('Usage : python3 dirspy.py <url>')
 	print('EXAMPLE : python3 dirspy.py http://127.0.0.1/')
 
@@ -68,8 +68,13 @@ def rikues(line):
 
 try:
 	url = sys.argv[1]
-	cek = requests.get(url, headers = user_agent, timeout = 5, verify=False)
-	leng = len(cek.text)
+	try:
+		cek = requests.get(url, headers = user_agent, timeout = 5, verify = False)
+		leng = len(cek.text)
+	except:
+		banner();
+		print('ERROR : Invalid url or target is down..')
+		os.system('kill -9 {}'.format(os.getpid()))
 except:
 	banner()
 	helep()
@@ -84,7 +89,7 @@ print('| Time     | Info          | URL                                         
 print('===============================================================================')
 for line in file:
 	try:
-		t = Thread(target=rikues, args=(line,))
+		t = threading.Thread(target=rikues, args=(line,))
 		t.start()
 		no = no + 1
 		jumlah = ( no * 100 ) / lcount
@@ -93,12 +98,9 @@ for line in file:
 		sys.stdout.flush()
 	except(KeyboardInterrupt,SystemExit):
 		print('\r| {} | Exiting program ...'.format(datetime.now().strftime('%H:%M:%S')))
-		sleep(3)
 		print('===============================================================================')
-		sys.exit()
+		os.system('kill -9 {}'.format(os.getpid()))
 
 while True:
-	sleep(3)
-	if t.is_alive() == False:
-		print('===============================================================================')
-		sys.exit()
+	sleep(3); cek = threading.active_count()
+	if cek == 1: print('==============================================================================='); exit()
