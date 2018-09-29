@@ -48,19 +48,24 @@ def rikues(line):
 	except (requests.ConnectionError, requests.exceptions.Timeout, requests.exceptions.ChunkedEncodingError, IOError): sys.exit()
 	status = r.status_code
 
+	# Success
 	if status == 200:
 		if line == '': pass
 		elif len(r.text) == leng: pass
 		else: sys.stdout.write(cl.green + '| {} | {} - {} | {}\n'.format(datetime.now().strftime('%H:%M:%S'), status, sizeof(num), alamat) + cl.end)
+	# Redirect
 	elif status == 301:
 		if len(r.text) == leng: pass
 		else: sys.stdout.write(cl.red + '| {} | {} - {} | {}\n'.format(datetime.now().strftime('%H:%M:%S'), status, sizeof(num), alamat) + cl.end)
+	#Internal server error
 	elif status == 500:
 		if len(r.text) == leng: pass
 		else: sys.stdout.write(cl.pink + '| {} | {} - {} | {}\n'.format(datetime.now().strftime('%H:%M:%S'), status, sizeof(num), alamat) + cl.end)
+	# Unauthenticated
 	elif status == 401:
 		if len(r.text) == leng: pass
 		else: sys.stdout.write(cl.yellow + '| {} | {} - {} | {}\n'.format(datetime.now().strftime('%H:%M:%S'), status, sizeof(num), alamat) + cl.end)
+	# Forbidden
 	elif status == 403:
 		if ".ht" in line: pass
 		elif len(r.text) == leng: pass
