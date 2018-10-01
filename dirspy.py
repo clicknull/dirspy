@@ -8,7 +8,8 @@ import requests, sys, urllib3
 import os, threading
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-file = open('dirs.txt', 'r').read().split('\n')
+filenamenya = "dirs.txt"
+file = open(filenamenya, 'r').read().split('\n')
 user_agent = {'User-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
 
 def banner():
@@ -21,7 +22,8 @@ def banner():
 	print('DirsPY v2.0 ( www.backboxindonesia.or.id )')
 
 def helep():
-	print('Usage : python3 dirspy.py <url>')
+	print('Usage : python3 dirspy.py <url> [option command]')
+	print('-i <filename>   Custom file dictionary, default using file dirst.txt beside dirspy.py')
 	print('EXAMPLE : python3 dirspy.py http://127.0.0.1/')
 
 class cl:
@@ -84,6 +86,28 @@ except:
 	banner()
 	helep()
 	sys.exit()
+
+if len(sys.argv)>1:
+	try:
+		argnya = sys.argv[2]
+		try:
+			if argnya == "-i":
+				filenamenya = sys.argv[3]
+				try:
+					file = open(filenamenya, 'r').read().split('\n')
+				except:
+					banner();
+					print('ERROR : Invalid filename')
+					sys.exit()
+		except:
+			banner();
+			print('ERROR : Invalid url or target is down..')
+			sys.exit()
+	except Exception as e:
+		banner()
+		helep()
+		print(e)
+		sys.exit()
 
 no = 0
 lcount = sum(1 for line in open('dirs.txt'))
