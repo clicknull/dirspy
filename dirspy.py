@@ -4,27 +4,14 @@
 
 from datetime import datetime
 from time import sleep, strftime
-import requests, sys, urllib3
-import os, threading
+from concurrent.futures import ThreadPoolExecutor
+from fake_useragent import UserAgent
+import requests, sys, urllib3, argparse
+import os, subprocess, resource
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-filenamenya = "dirs.txt"
-file = open(filenamenya, 'r').read().split('\n')
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) # Fix insecure ssl
+resource.setrlimit(resource.RLIMIT_NOFILE, (8192, 8192)) # Fix to many open file (RAM => 8GB)
 user_agent = {'User-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
-
-def banner():
-	print(' ____  _          ______   __')
-	print('|  _ \(_)_ __ ___|  _ \ \ / /')
-	print("| | | | | '__/ __| |_) \ V /")
-	print('| |_| | | |  \__ \  __/ | |')
-	print('|____/|_|_|  |___/_|    |_|\n')
-	print('Backbox Indonesia (c) 2017 - 2018\n\n')
-	print('DirsPY v2.0 ( www.backboxindonesia.or.id )')
-
-def helep():
-	print('Usage : python3 dirspy.py <url> [option command]')
-	print('-i <filename>   Custom file dictionary, default using file dirst.txt beside dirspy.py')
-	print('EXAMPLE : python3 dirspy.py http://127.0.0.1/')
 
 class cl:
 	pink = '\033[95m'
@@ -43,11 +30,15 @@ def sizeof(num, suffix='B'):
 		num /= 1024.0
 
 def rikues(line):
-	alamat = str(url) + str(line)
-	try:
-		r = requests.get(alamat, headers = user_agent, timeout = 5, verify=False)
-		num = int(len(r.text))
-	except (requests.ConnectionError, requests.exceptions.Timeout, requests.exceptions.ChunkedEncodingError, IOError): sys.exit()
+	alamat = str(args.target) + str(line)
+	if args.random_agent == True:
+		user_agent = {'User-agent': UserAgent().random}
+		r = requests.get(alamat, headers = user_agent, timeout = 5, allow_redirects = False, verify = False)
+	else:
+		user_agent = {'User-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'}
+		r = requests.get(alamat, headers = user_agent, timeout = 5, allow_redirects = False, verify = False)
+
+	num = int(len(r.text))
 	status = r.status_code
 
 	# Success
@@ -73,53 +64,48 @@ def rikues(line):
 		elif len(r.text) == leng: pass
 		else: sys.stdout.write(cl.blue + '| {} | {} - {} | {}\n'.format(datetime.now().strftime('%H:%M:%S'), status, sizeof(num),alamat) + cl.end)
 
+def prog():
+	sys.stdout.flush()
+	sys.stdout.write('| {} | [+] Wait a moment ...\r'.format(datetime.now().strftime('%H:%M:%S')))
+	sys.stdout.flush()
+	sys.stdout.write('| {} | [x] Wait a moment ...\r'.format(datetime.now().strftime('%H:%M:%S')))
+
+print(' ____  _          ______   __')
+print('|  _ \(_)_ __ ___|  _ \ \ / /')
+print("| | | | | '__/ __| |_) \ V /")
+print('| |_| | | |  \__ \  __/ | |')
+print('|____/|_|_|  |___/_|    |_|\n')
+print('Backbox Indonesia (c) 2017 - 2018')
+print('DirsPY v3.0 ( www.backboxindonesia.or.id )\n')
+
+parser = argparse.ArgumentParser()
+parser.add_argument("target", help="Your target (EX: http://www.target.com/)")
+parser.add_argument("-w", "--wordlist", help="Wordlist file", default="dirs.txt")
+parser.add_argument("-t", "--thread", help="Max thread (default:100)", type=int, default=100)
+parser.add_argument("--random-agent", help="Random user agent", action="store_true")
+args = parser.parse_args()
+
 try:
-	url = sys.argv[1]
-	try:
-		cek = requests.get(url, headers = user_agent, timeout = 5, verify = False)
-		leng = len(cek.text)
-	except:
-		banner();
-		print('ERROR : Invalid url or target is down..')
-		os.system('kill -9 {}'.format(os.getpid()))
+	cek = requests.get(args.target, headers = user_agent, timeout = 5, verify = False)
+	leng = len(cek.text)
 except:
-	banner()
-	helep()
+	print('ERROR: Invalid address or target is down..')
 	sys.exit()
 
-if len(sys.argv)>1:
-	try:
-		argnya = sys.argv[2]
-		try:
-			if argnya == "-i":
-				filenamenya = sys.argv[3]
-				try:
-					file = open(filenamenya, 'r').read().split('\n')
-				except:
-					banner();
-					print('ERROR : Invalid filename')
-					sys.exit()
-		except:
-			banner();
-			print('ERROR : Invalid url or target is down..')
-			sys.exit()
-	except Exception as e:
-		banner()
-		helep()
-		print(e)
-		sys.exit()
-
+file = open(args.wordlist, 'r').read().split('\n')
 no = 0
 lcount = sum(1 for line in open('dirs.txt'))
-banner()
 print('Start scanning directory..')
+print('Wordlist : {} | Thread : {} | Random agent : {}'.format(args.wordlist, args.thread, args.random_agent))
 print('===============================================================================')
 print('| Time     | Info          | URL                                              |')
 print('===============================================================================')
+executor = ThreadPoolExecutor(max_workers=args.thread)
+futures = []
 for line in file:
 	try:
-		t = threading.Thread(target=rikues, args=(line,))
-		t.start()
+		a = executor.submit(rikues, line)
+		futures.append(a)
 		no = no + 1
 		jumlah = ( no * 100 ) / lcount
 		sys.stdout.flush()
@@ -128,8 +114,18 @@ for line in file:
 	except(KeyboardInterrupt,SystemExit):
 		print('\r| {} | Exiting program ...'.format(datetime.now().strftime('%H:%M:%S')))
 		print('===============================================================================')
-		os.system('kill -9 {}'.format(os.getpid()))
+		os.kill(os.getpid(), 9)
 
 while True:
-	sleep(3); cek = threading.active_count()
-	if cek == 1: print('==============================================================================='); exit()
+	try:
+		prog()
+		cek = a.done()
+		if cek == True:
+			sleep(1)
+			print('===============================================================================');
+			exit()
+
+	except KeyboardInterrupt:
+		print('\r| {} | Exiting program ...'.format(datetime.now().strftime('%H:%M:%S')))
+		print('===============================================================================')
+		os.kill(os.getpid(), 9)
