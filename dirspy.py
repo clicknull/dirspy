@@ -92,9 +92,9 @@ except:
 	print('ERROR: Invalid address or target is down..')
 	sys.exit()
 
-file = open(args.wordlist, 'r').read().split('\n')
 no = 0
-lcount = sum(1 for line in open('dirs.txt'))
+file = open(args.wordlist, 'r', encoding='ISO-8859-1').read().split('\n')
+lcount = sum(1 for line in open(args.wordlist, encoding='ISO-8859-1'))
 print('Start scanning directory..')
 print('Wordlist : {} | Thread : {} | Random agent : {}'.format(args.wordlist, args.thread, args.random_agent))
 print('===============================================================================')
